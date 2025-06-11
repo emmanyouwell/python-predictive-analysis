@@ -158,7 +158,37 @@ def train_and_evaluate():
     cm = confusion_matrix(y_test, preds)
 
     return acc, cm, report
-
+def get_model_report():
+    try:
+        df = prepare_data()
+        print("Data preparation successful.")
+    except Exception as e:
+        print(f"[prepare_data ERROR]: {e}")
+        raise
+   
+   
+    if df.empty:
+        raise ValueError("No data available for training. Check Google Sheet and MongoDB labels.")
+    model = joblib.load(MODEL_PATH)
+    X = df[columns_to_change]
+    y = df["eligibility"]
+    print(f"Total rows after cleaning: {len(df)}")
+    try:
+        X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=0.3, random_state=42, stratify=y)
+        X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42, stratify=y_temp)
+       
+        # Training with no validation set    
+        # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=42, stratify=y)
+    
+        
+    except ValueError as e:
+        print(f"[train_test_split ERROR]: {e}")
+        raise
+    preds = model.predict(X_test)
+    report = classification_report(y_test, preds, target_names=["Ineligible", "Eligible"], output_dict=True)
+    acc = accuracy_score(y_test, preds)
+    cm = confusion_matrix(y_test, preds)
+    return acc, cm, report
 
 @app.on_event("startup")
 def startup_event():
@@ -229,3 +259,27 @@ def retrain():
             "Ineligible": f"{report['Ineligible']['f1-score']:.2f}"
         }
     }
+
+@app.get("/model_report")
+def model_report():
+    try:
+        acc, cm, report = get_model_report()
+        return {
+            "message": "Model report generated",
+            "accuracy": f"{acc:.2%}",
+            "confusion_matrix": cm.tolist(),
+            "precision": {
+                "Eligible": f"{report['Eligible']['precision']:.2f}",
+                "Ineligible": f"{report['Ineligible']['precision']:.2f}"
+            },
+            "recall": {
+                "Eligible": f"{report['Eligible']['recall']:.2f}",
+                "Ineligible": f"{report['Ineligible']['recall']:.2f}"
+            },
+            "f1_score": {
+                "Eligible": f"{report['Eligible']['f1-score']:.2f}",
+                "Ineligible": f"{report['Ineligible']['f1-score']:.2f}"
+            }
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error generating model report: {str(e)}")
