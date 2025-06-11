@@ -72,7 +72,7 @@ app = FastAPI()
 # Allow CORS for your frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://tchmb-portal.vercel.app", "http://127.0.0.1:5173"],  # Or specify frontend domain: ["https://your-frontend.com"]
+    allow_origins=["https://tchmb-portal.vercel.app", "http://127.0.0.1:5173", "*"],  # Or specify frontend domain: ["https://your-frontend.com"]
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
