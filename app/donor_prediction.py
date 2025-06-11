@@ -235,15 +235,18 @@ def predict(request: PredictRequest):
         "confusion_matrix": cm.tolist(),
         "precision": {
             "Eligible": f"{report['Eligible']['precision']:.2f}",
-            "Ineligible": f"{report['Ineligible']['precision']:.2f}"
+            "Ineligible": f"{report['Ineligible']['precision']:.2f}",
+            "Overall": f"{report['macro avg']['precision']:.2f}"  # or use 'weighted avg'
         },
         "recall": {
             "Eligible": f"{report['Eligible']['recall']:.2f}",
-            "Ineligible": f"{report['Ineligible']['recall']:.2f}"
+            "Ineligible": f"{report['Ineligible']['recall']:.2f}",
+            "Overall": f"{report['macro avg']['recall']:.2f}"   
         },
         "f1_score": {
             "Eligible": f"{report['Eligible']['f1-score']:.2f}",
-            "Ineligible": f"{report['Ineligible']['f1-score']:.2f}"
+            "Ineligible": f"{report['Ineligible']['f1-score']:.2f}",
+            "Overall": f"{report['macro avg']['f1-score']:.2f}"
         }
     }
 
@@ -257,15 +260,18 @@ def retrain():
         "confusion_matrix": cm.tolist(),
         "precision": {
             "Eligible": f"{report['Eligible']['precision']:.2f}",
-            "Ineligible": f"{report['Ineligible']['precision']:.2f}"
+            "Ineligible": f"{report['Ineligible']['precision']:.2f}",
+            "Overall": f"{report['macro avg']['precision']:.2f}"  # or use 'weighted avg'
         },
         "recall": {
             "Eligible": f"{report['Eligible']['recall']:.2f}",
-            "Ineligible": f"{report['Ineligible']['recall']:.2f}"
+            "Ineligible": f"{report['Ineligible']['recall']:.2f}",
+            "Overall": f"{report['macro avg']['recall']:.2f}"   
         },
         "f1_score": {
             "Eligible": f"{report['Eligible']['f1-score']:.2f}",
-            "Ineligible": f"{report['Ineligible']['f1-score']:.2f}"
+            "Ineligible": f"{report['Ineligible']['f1-score']:.2f}",
+            "Overall": f"{report['macro avg']['f1-score']:.2f}"
         }
     }
 
@@ -279,15 +285,18 @@ def model_report():
             "confusion_matrix": cm.tolist(),
             "precision": {
                 "Eligible": f"{report['Eligible']['precision']:.2f}",
-                "Ineligible": f"{report['Ineligible']['precision']:.2f}"
+                "Ineligible": f"{report['Ineligible']['precision']:.2f}",
+                "Overall": f"{report['macro avg']['precision']:.2f}"  # or use 'weighted avg'
             },
             "recall": {
                 "Eligible": f"{report['Eligible']['recall']:.2f}",
-                "Ineligible": f"{report['Ineligible']['recall']:.2f}"
+                "Ineligible": f"{report['Ineligible']['recall']:.2f}",
+                "Overall": f"{report['macro avg']['recall']:.2f}"   
             },
             "f1_score": {
                 "Eligible": f"{report['Eligible']['f1-score']:.2f}",
-                "Ineligible": f"{report['Ineligible']['f1-score']:.2f}"
+                "Ineligible": f"{report['Ineligible']['f1-score']:.2f}",
+                "Overall": f"{report['macro avg']['f1-score']:.2f}"
             }
         }
     except Exception as e:
