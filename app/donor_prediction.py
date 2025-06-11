@@ -1,6 +1,8 @@
 import pandas as pd
 import pymongo
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+
 from pydantic import BaseModel
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
@@ -67,7 +69,14 @@ columns_to_change = [
 
 # --- FASTAPI SETUP ---
 app = FastAPI()
-
+# Allow CORS for your frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://tchmb-portal.vercel.app", "http://127.0.0.1:5173"],  # Or specify frontend domain: ["https://your-frontend.com"]
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 class PredictRequest(BaseModel):
     submissionID: str
 
